@@ -1,19 +1,17 @@
 package it.rentify.rentifyapp.controllers;
 
-import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.web.WebView;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import it.rentify.rentifyapp.DB.AffittuarioDAO;
 import it.rentify.rentifyapp.DB.DBConnection;
 import it.rentify.rentifyapp.beans.Affittuario;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.context.IContext;
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
-import java.io.InputStream;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -21,64 +19,56 @@ import java.util.ArrayList;
 public class ShowHome {
 
     public void start1(Stage primaryStage) throws Exception {
-
-
-        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setSuffix(".html"); // Indica l'estensione dei file
-        templateResolver.setTemplateMode("HTML");
-        templateResolver.setCharacterEncoding("UTF-8");
-
-        TemplateEngine templateEngine = new TemplateEngine();
-        templateEngine.setTemplateResolver(templateResolver);
-
-        //recupero la connessione al database
+        // Recupero la connessione al database
         DBConnection db = new DBConnection();
-        Connection conn = null;
+        Connection conn = db.getConnection();
 
-        if (db.getConnection() != null) {
-            conn = db.getConnection();
-        } else {
+        if (conn == null) {
             System.out.println("Errore nella connessione al database");
             return;
         }
-
 
         // Crea una lista di affittuari
         ArrayList<Affittuario> affittuari = new ArrayList<>();
         AffittuarioDAO affittuarioDAO = new AffittuarioDAO(conn);
 
-        Context context = new Context();
-
         try {
             affittuari = affittuarioDAO.getAffittuari();
         } catch (SQLException e) {
-            //messaggio di errore tramite tag thymeleaf
-            context.setVariable("error", "Errore nel recupero degli affittuari");
+            showAlert("Errore nel recupero degli affittuari");
         }
 
-        // Imposta il contesto Thymeleaf con i dati
-        context.setVariable("affittuari", affittuari);
-        context.setVariable("db", conn);
+        // Crea la tabella per visualizzare gli affittuari
+        TableView<Affittuario> tableView = new TableView<>();
+        TableColumn<Affittuario, String> nomeColumn = new TableColumn<>("Nome");
+        nomeColumn.setCellValueFactory(new PropertyValueFactory<>("nome"));
+        TableColumn<Affittuario, String> cognomeColumn = new TableColumn<>("Cognome");
+        cognomeColumn.setCellValueFactory(new PropertyValueFactory<>("cognome"));
 
-        try {
+        tableView.getColumns().add(nomeColumn);
+        tableView.getColumns().add(cognomeColumn);
+        tableView.getItems().addAll(affittuari);
 
-            String renderedHtml = templateEngine.process("home", context);
+        // Crea il pulsante per inserire un nuovo affittuario
+        Button insertButton = new Button("Inserisci Affittuario");
+        insertButton.setOnAction(event -> insertAffittuario());
 
-            WebView webView = new WebView();
-            webView.getEngine().loadContent(renderedHtml);
-
-
-            // Configura la scena e mostra la finestra
-            Scene scene = new Scene(webView, 800, 600);
-            primaryStage.setScene(scene);
-            primaryStage.setTitle("Elenco Affittuari");
-            primaryStage.show();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Errore nel rendering del template: " + e.getMessage());
-        }
-
+        // Configura il layout e la scena
+        VBox vbox = new VBox(tableView, insertButton);
+        Scene scene = new Scene(vbox, 800, 600);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Elenco Affittuari");
+        primaryStage.show();
     }
 
+    private void insertAffittuario() {
+        // Implementa il metodo per inserire un nuovo affittuario
+        System.out.println("Insert Affittuario button clicked");
+    }
+
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setContentText(message);
+        alert.show();
+    }
 }
