@@ -6,6 +6,7 @@ import it.rentify.rentifyapp.DB.DBConnection;
 import it.rentify.rentifyapp.controllers.ShowHome;
 
 import java.sql.Connection;
+import java.sql.Date;
 
 public class Main extends Application {
 

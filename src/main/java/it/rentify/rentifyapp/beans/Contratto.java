@@ -13,12 +13,20 @@ public class Contratto {
     private TipoContratto tipo;
     private TipoRate rate;
 
-    public Contratto(String codiceFiscale, Boolean iva, Date dataInizio, TipoContratto tipo, TipoRate rate) {
+    private int importoAnnuale;
+    private int adeguamento;
+    private int spese;
+
+
+    public Contratto(String codiceFiscale, Boolean iva, Date dataInizio, TipoContratto tipo, TipoRate rate, int importoAnnuale, int adeguamento, int spese) {
         this.codiceFiscale = codiceFiscale;
         this.iva = iva;
         this.dataInizio = dataInizio;
         this.tipo = tipo;
         this.rate = rate;
+        this.importoAnnuale=importoAnnuale;
+        this.adeguamento=adeguamento;
+        this.spese=spese;
     }
 
     public String getCodiceFiscale() {
@@ -56,5 +64,34 @@ public class Contratto {
     public void setRate(TipoRate rate) {
         this.rate = rate;
     }
+
+    public int getImportoAnnuale() {
+        return importoAnnuale;
+    }
+
+    public int getAdeguamento() {
+        return adeguamento;
+    }
+
+    public int getSpese() {
+        return spese;
+    }
+
+    public void setCodiceFiscale(String codiceFiscale) {
+        this.codiceFiscale = codiceFiscale;
+    }
+
+    public void setImportoAnnuale(int importoAnnuale) {
+        this.importoAnnuale = importoAnnuale;
+    }
+
+    public void setAdeguamento(int adeguamento) {
+        this.adeguamento = adeguamento;
+    }
+
+    public void setSpese(int spese) {
+        this.spese = spese;
+    }
+
 
 }

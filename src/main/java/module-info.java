@@ -8,6 +8,7 @@ module it.rentify.rentifyapp {
     requires com.almasb.fxgl.all;
     requires java.sql;
 
+    opens it.rentify.rentifyapp.beans to javafx.base;
     opens it.rentify.rentifyapp to javafx.fxml;
     exports it.rentify.rentifyapp;
 }

@@ -1,12 +1,11 @@
 package it.rentify.rentifyapp.controllers;
 
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import it.rentify.rentifyapp.DB.AffittuarioDAO;
 import it.rentify.rentifyapp.DB.DBConnection;
@@ -17,11 +16,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ShowHome {
+    DBConnection db = new DBConnection();
+    Stage primaryStage;
 
     public void start1(Stage primaryStage) throws Exception {
-        // Recupero la connessione al database
-        DBConnection db = new DBConnection();
         Connection conn = db.getConnection();
+        this.primaryStage = primaryStage;
 
         if (conn == null) {
             System.out.println("Errore nella connessione al database");
@@ -53,8 +53,12 @@ public class ShowHome {
         Button insertButton = new Button("Inserisci Affittuario");
         insertButton.setOnAction(event -> insertAffittuario());
 
+        //crea il pulsante per eliminare un affittuario
+        Button deleteButton = new Button("Elimina Affittuario");
+        deleteButton.setOnAction(event -> deleteAffittuario());
+
         // Configura il layout e la scena
-        VBox vbox = new VBox(tableView, insertButton);
+        VBox vbox = new VBox(tableView, insertButton, deleteButton);
         Scene scene = new Scene(vbox, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Elenco Affittuari");
@@ -62,8 +66,54 @@ public class ShowHome {
     }
 
     private void insertAffittuario() {
-        // Implementa il metodo per inserire un nuovo affittuario
-        System.out.println("Insert Affittuario button clicked");
+        // Create a new stage for the modal window
+        Stage stage = new Stage();
+        stage.setTitle("Inserimento Affittuario");
+
+        // Create form fields
+        TextField nomeField = new TextField();
+        nomeField.setPromptText("Nome");
+        TextField cognomeField = new TextField();
+        cognomeField.setPromptText("Cognome");
+        TextField CFField = new TextField();
+        CFField.setPromptText("Codice Fiscale");
+
+        // Create a submit button
+        Button submitButton = new Button("Inserisci");
+        submitButton.setOnAction(event -> {
+            String nome = nomeField.getText();
+            String cognome = cognomeField.getText();
+            String CF = CFField.getText();
+
+            if (nome.isEmpty() || cognome.isEmpty() || CF.isEmpty()) {
+                showAlert("Tutti i campi sono obbligatori");
+            } else {
+                //aggiungo il nuovo affittuario al database
+                AffittuarioDAO affittuarioDAO = new AffittuarioDAO(db.getConnection());
+                Affittuario affittuario = new Affittuario(nome, cognome, CF);
+                try {
+                    affittuarioDAO.insertAffittuario(affittuario);
+                } catch (SQLException e) {
+                    showAlert("Errore nell'inserimento dell'affittuario");
+                }
+                stage.close();
+            }
+        });
+
+        // Create a layout and add form fields and button
+        VBox vbox = new VBox(10, nomeField, cognomeField, CFField, submitButton);
+        vbox.setPadding(new Insets(10));
+
+        // Create a scene and set it on the stage
+        Scene scene = new Scene(vbox, 300, 200);
+        stage.setScene(scene);
+        stage.initModality(Modality.APPLICATION_MODAL); // Make the window modal
+        stage.showAndWait();
+    }
+
+    private void deleteAffittuario() {
+        // Implementa il metodo per eliminare un affittuario
+        System.out.println("Delete Affittuario button clicked");
     }
 
     private void showAlert(String message) {
