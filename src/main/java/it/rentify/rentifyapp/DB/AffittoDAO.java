@@ -33,21 +33,23 @@ public class AffittoDAO {
         }
     }
 
-    public Affitto getAffitto(String codiceFiscale) throws SQLException {
+    public ArrayList<Affitto> getAffitto(String codiceFiscale) throws SQLException {
         String query = "SELECT * FROM Affitto WHERE CodiceFiscale = ?";
-        Affitto affitto = null;
+        ArrayList<Affitto> affitto = null;
 
         try (PreparedStatement pstatement = conn.prepareStatement(query);) {
             pstatement.setString(1, codiceFiscale);
             try (ResultSet result = pstatement.executeQuery();) {
                 while (result.next()) {
-                    affitto = new Affitto(result.getString("CodiceFiscale"),
+                    Affitto affittoTemp = new Affitto(result.getString("CodiceFiscale"),
                             result.getInt("Importo"), result.getDate("Scadenza"),
                             result.getBoolean("Pagato"));
+
+                    affitto.add(affittoTemp);
                 }
-                return affitto;
             }
         }
+        return affitto;
     }
 
     public void insertAffitto(Affitto affitto) throws SQLException {

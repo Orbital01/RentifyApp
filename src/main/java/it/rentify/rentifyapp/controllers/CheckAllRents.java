@@ -17,7 +17,7 @@ public class CheckAllRents {
     Connection conn = null;
 
     //chiamo questo metodo per controllare tutti gli affitti mensili e vedere se sono stati pagati
-    public ArrayList<Affittuario> checkMonthlyRent(ArrayList<Affittuario> affittuari, Connection conn) {
+    public ArrayList<Affittuario> checkMonthlyRent(Connection conn) {
 
         //prendo la connessione al DB
         this.conn = conn;
@@ -69,7 +69,7 @@ public class CheckAllRents {
     }
 
     //chiamo questo metodo per verificare tutti gli affitti trimestrali e vedere se sono stati pagati
-    public ArrayList<Affittuario> check3MonthRent(ArrayList<Affittuario> affittuari, Connection conn){
+    public ArrayList<Affittuario> check3MonthRent(Connection conn){
         //prendo la connessione al DB
         this.conn = conn;
 

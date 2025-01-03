@@ -53,7 +53,7 @@ public class DBConnection {
 
     //creo la tabella Affitto
     public void createTableAffitto() {
-        String query = "CREATE TABLE IF NOT EXISTS Affitto (CodiceFiscale TEXT PRIMARY KEY, importo INTEGER, Scadenza TEXT, Pagato BOOLEAN, FOREIGN KEY (CodiceFiscale) REFERENCES Affittuario(CodiceFiscale))";
+        String query = "CREATE TABLE IF NOT EXISTS Affitto (CodiceFiscale TEXT PRIMARY KEY, importo INTEGER, Scadenza TEXT, Pagato BOOLEAN, FOREIGN KEY (CodiceFiscale) REFERENCES Affittuario(CodiceFiscale) ON DELETE CASCADE)";
         try {
             conn = DriverManager.getConnection(url);
             conn.createStatement().execute(query);
@@ -65,7 +65,7 @@ public class DBConnection {
 
     //creo la tabella Contratto
     public void createTableContratto() {
-        String query = "CREATE TABLE IF NOT EXISTS Contratto (CodiceFiscale TEXT PRIMARY KEY, Iva BOOLEAN, DataInizio TEXT, Tipo TEXT, Rate TEXT,ImportoAnnuale INTEGER, Adeguamento INTEGER, Spese INTEGER, FOREIGN KEY (CodiceFiscale) REFERENCES Affittuario(CodiceFiscale))";
+        String query = "CREATE TABLE IF NOT EXISTS Contratto (CodiceFiscale TEXT PRIMARY KEY, Iva BOOLEAN, DataInizio TEXT, Tipo TEXT, Rate TEXT,ImportoAnnuale INTEGER, Adeguamento INTEGER, Spese INTEGER, FOREIGN KEY (CodiceFiscale) REFERENCES Affittuario(CodiceFiscale) ON DELETE CASCADE)";
         try {
             conn = DriverManager.getConnection(url);
             conn.createStatement().execute(query);
