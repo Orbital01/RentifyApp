@@ -54,4 +54,13 @@ public class AffittuarioDAO {
             pstatement.executeUpdate();
         }
     }
+
+    public void deleteAffittuario(String codiceFiscale) throws SQLException {
+        String query = "DELETE FROM Affittuario WHERE CodiceFiscale = ?";
+
+        try (PreparedStatement pstatement = conn.prepareStatement(query);) {
+            pstatement.setString(1, codiceFiscale);
+            pstatement.executeUpdate();
+        }
+    }
 }

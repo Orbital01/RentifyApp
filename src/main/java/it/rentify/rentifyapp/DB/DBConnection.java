@@ -28,7 +28,6 @@ public class DBConnection {
                 //creo le tabelle
                 createTableAffittuario();
                 createTableAffitto();
-                createTablePagamento();
                 createTableContratto();
 
                 System.out.println("Database creato con successo");
@@ -64,21 +63,9 @@ public class DBConnection {
         }
     }
 
-    //creo la tabella Pagamento
-    public void createTablePagamento() {
-        String query = "CREATE TABLE IF NOT EXISTS Pagamento (CodiceFiscale TEXT PRIMARY KEY, ImportoAnnuale INTEGER, Adeguamento INTEGER, Spese INTEGER, FOREIGN KEY (CodiceFiscale) REFERENCES Affittuario(CodiceFiscale))";
-        try {
-            conn = DriverManager.getConnection(url);
-            conn.createStatement().execute(query);
-            System.out.println("Tabella Pagamento creata con successo");
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
     //creo la tabella Contratto
     public void createTableContratto() {
-        String query = "CREATE TABLE IF NOT EXISTS Contratto (CodiceFiscale TEXT PRIMARY KEY, Iva BOOLEAN, DataInizio TEXT, Tipo TEXT, Rate TEXT, FOREIGN KEY (CodiceFiscale) REFERENCES Affittuario(CodiceFiscale))";
+        String query = "CREATE TABLE IF NOT EXISTS Contratto (CodiceFiscale TEXT PRIMARY KEY, Iva BOOLEAN, DataInizio TEXT, Tipo TEXT, Rate TEXT,ImportoAnnuale INTEGER, Adeguamento INTEGER, Spese INTEGER, FOREIGN KEY (CodiceFiscale) REFERENCES Affittuario(CodiceFiscale))";
         try {
             conn = DriverManager.getConnection(url);
             conn.createStatement().execute(query);
